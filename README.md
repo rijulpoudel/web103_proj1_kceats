@@ -32,9 +32,9 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented required features:
 
-<img src='https://imgur.com/a/xUSoy2D' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<a href='https://imgur.com/a/xUSoy2D' title='Video Walkthrough'>Link to GIF</a>
 
-GIF created with Kap (macOS) / ScreenToGif (Windows)
+GIF created with Kap
 
 ## Notes
 
