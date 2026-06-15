@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const restaurants = require("./data");
+const pool = require("./config/database");
 
 const app = express();
 const PORT = 3000;
@@ -8,7 +8,9 @@ const PORT = 3000;
 app.use(express.static(path.join(__dirname, "public")));
 
 // HOME ROUTE
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const results = await pool.query("SELECT * FROM restaurants");
+  const restaurants = results.rows;
   let cards = restaurants
     .map(
       (r, i) => `
@@ -18,7 +20,7 @@ app.get("/", (req, res) => {
         <h2><a href="/restaurants/${r.id}">${r.name}</a></h2>
         <p class="tags">
           <span>${r.cuisine}</span>
-          <span>${r.priceRange}</span>
+          <span>${r.pricerange}</span>
           <span>${r.neighborhood}</span>
         </p>
         <p>${r.description}</p>
@@ -54,8 +56,11 @@ app.get("/", (req, res) => {
 });
 
 // DETAIL ROUTE
-app.get("/restaurants/:id", (req, res) => {
-  const restaurant = restaurants.find((r) => r.id === req.params.id);
+app.get("/restaurants/:id", async (req, res) => {
+  const results = await pool.query("SELECT * FROM restaurants WHERE id= $1", [
+    req.params.id,
+  ]);
+  const restaurant = results.rows[0];
 
   if (!restaurant) {
     return res.status(404).sendFile(path.join(__dirname, "views", "404.html"));
@@ -77,13 +82,13 @@ app.get("/restaurants/:id", (req, res) => {
           <h1>${restaurant.name}</h1>
           <p class="tags">
             <span>${restaurant.cuisine}</span>
-            <span>${restaurant.priceRange}</span>
+            <span>${restaurant.pricerange}</span>
             <span>${restaurant.neighborhood}</span>
           </p>
         </div>
         <div class="detail-body">
           <p>${restaurant.description}</p>
-          <div class="must-order">Must order — ${restaurant.mustOrder}</div>
+          <div class="must-order">Must order — ${restaurant.mustorder}</div>
         </div>
       </main>
     </body>
